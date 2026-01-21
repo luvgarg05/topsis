@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOPSIS Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 0;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #00d4ff;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .subtitle {
+            color: #aaa;
+            font-size: 1.1em;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-left: 5px solid #00d4ff;
+        }
+
+        .card h2 {
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        input[type="email"],
+        input[type="text"],
+        input[type="file"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        input[type="email"]:focus,
+        input[type="text"]:focus,
+        input[type="file"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #00d4ff;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
+        }
+
+        .form-hint {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+            color: #1a1a1a;
+            border: none;
+            padding: 14px 28px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 212, 255, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .secondary-button {
+            background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+            margin-right: 10px;
+            display: inline-block;
+            width: auto;
+        }
+
+        .spinner {
+            display: none;
+            border: 4px solid rgba(0, 212, 255, 0.2);
+            border-top: 4px solid #00d4ff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .result {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 30px;
+            border-left: 5px solid #00d4ff;
+        }
+
+        .result-header {
+            background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+            color: #1a1a1a;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .result-header h2 {
+            margin: 0;
+            font-size: 1.6em;
+        }
+
+        .result-header p {
+            margin: 5px 0 0 0;
+            opacity: 0.8;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .results-table th {
+            background: #f5f5f5;
+            color: #1a1a1a;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #00d4ff;
+        }
+
+        .results-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+            color: #333;
+        }
+
+        .results-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .score-bar {
+            background: linear-gradient(90deg, #00d4ff 0%, #0099cc 100%);
+            height: 6px;
+            border-radius: 3px;
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .example-section {
+            background: #f0f8ff;
+            border-left: 4px solid #00d4ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            color: #333;
+        }
+
+        .example-section h3 {
+            color: #00d4ff;
+            margin-bottom: 10px;
+        }
+
+        .example-section p {
+            margin: 8px 0;
+            color: #666;
+        }
+
+        .error {
+            color: #d32f2f;
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+
+        .validation-success {
+            color: #388e3c;
+        }
+
+        #emptyState {
+            text-align: center;
+            color: #999;
+            padding: 40px 20px;
+        }
+
+        #emptyState p:first-child {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: #c8e6c9;
+            color: #2e7d32;
+            border-left: 4px solid #2e7d32;
+        }
+
+        .alert-error {
+            background: #ffcdd2;
+            color: #c62828;
+            border-left: 4px solid #c62828;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>TOPSIS Analysis</h1>
+            <p class="subtitle">Multi-Criteria Decision Making Tool</p>
+        </header>
+
+        <!-- Input Form -->
+        <div class="card">
+            <h2>Analysis Form</h2>
+            <form id="analysisForm">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="your.email@example.com" required>
+                    <div class="form-hint">Results will be sent to this email</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="file">Data File</label>
+                    <input type="file" id="file" name="file" accept=".csv,.xlsx,.xls,.json" required>
+                    <div class="form-hint">Supports: CSV, Excel (.xlsx, .xls), JSON | First column: names, rest: numeric values</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="weights">Weights</label>
+                    <input type="text" id="weights" name="weights" placeholder="1,1,1,2" required>
+                    <div class="form-hint">Comma-separated numeric values (e.g., 1,1,1,2)</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="impacts">Impacts</label>
+                    <input type="text" id="impacts" name="impacts" placeholder="+,+,-,+" required>
+                    <div class="form-hint">Comma-separated: + (higher is better) or - (lower is better). Example: +,-,+,+</div>
+                </div>
+
+                <button type="submit">Analyze</button>
+            </form>
+
+            <!-- Example Section -->
+            <div class="example-section">
+                <h3>Example</h3>
+                <p><strong>Weights:</strong> 1,1,1,2</p>
+                <p><strong>Impacts:</strong> +,+,+,-</p>
+                <p style="margin-top: 10px; color: #666; font-size: 0.9em;">
+                    + means "higher is better" (benefit)<br>
+                    - means "lower is better" (cost)
+                </p>
+            </div>
+        </div>
+
+        <!-- Spinner -->
+        <div class="spinner" id="spinner"></div>
+
+        <!-- Results Section -->
+        <div class="card">
+            <h2>Results</h2>
+            <div id="resultSection" class="result">
+                <div class="result-header">
+                    <h2>Analysis Completed!</h2>
+                    <p id="resultTime"></p>
+                </div>
+                
+                <h3 style="color: #333; margin-top: 20px; margin-bottom: 15px;">Preview</h3>
+                <table class="results-table" id="resultsTable">
+                    <thead id="tableHead">
+                    </thead>
+                    <tbody id="resultsBody">
+                    </tbody>
+                </table>
+                
+                <div class="button-group">
+                    <button class="secondary-button" id="downloadBtn">Download CSV</button>
+                    <button class="secondary-button" id="newAnalysisBtn">New Analysis</button>
+                </div>
+            </div>
+
+            <div id="emptyState" style="text-align: center; color: #999; padding: 40px 20px;">
+                <p style="font-size: 3em; margin-bottom: 10px;">📊</p>
+                <p>Results will appear here after analysis</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('analysisForm');
+        const spinner = document.getElementById('spinner');
+        const resultSection = document.getElementById('resultSection');
+        const emptyState = document.getElementById('emptyState');
+        const resultsTable = document.getElementById('resultsTable');
+        const tableHead = document.getElementById('tableHead');
+        const resultsBody = document.getElementById('resultsBody');
+        let currentDownloadFilename = null;
+        let currentFullData = null;
+
+        // Form submission
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(form);
+            
+            spinner.style.display = 'block';
+            resultSection.style.display = 'none';
+            emptyState.style.display = 'block';
+
+            try {
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                spinner.style.display = 'none';
+
+                if (data.success) {
+                    displayResults(data.results, data.full_data, data.columns);
+                    currentDownloadFilename = data.download_filename;
+                    
+                    if (data.email_sent) {
+                        alert('Results sent to your email!');
+                    }
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                spinner.style.display = 'none';
+                alert('Error: ' + error.message);
+            }
+        });
+
+        function displayResults(results, fullData, columns) {
+            // Build table header
+            tableHead.innerHTML = '';
+            const headerRow = document.createElement('tr');
+            columns.forEach(col => {
+                const th = document.createElement('th');
+                th.textContent = col;
+                headerRow.appendChild(th);
+            });
+            tableHead.appendChild(headerRow);
+            
+            // Build table body
+            resultsBody.innerHTML = '';
+            fullData.forEach(row => {
+                const tr = document.createElement('tr');
+                columns.forEach(col => {
+                    const td = document.createElement('td');
+                    if (col === 'Topsis Score') {
+                        td.innerHTML = `<strong style="color: #0099cc;">${parseFloat(row[col]).toFixed(6)}</strong>`;
+                    } else if (col === 'Rank') {
+                        td.innerHTML = `<strong>${row[col]}</strong>`;
+                    } else {
+                        td.textContent = typeof row[col] === 'number' ? row[col].toFixed(2) : row[col];
+                    }
+                    tr.appendChild(td);
+                });
+                resultsBody.appendChild(tr);
+            });
+
+            emptyState.style.display = 'none';
+            resultSection.style.display = 'block';
+            document.getElementById('resultTime').textContent = new Date().toLocaleString();
+        }
+
+        // Download button
+        document.getElementById('downloadBtn').addEventListener('click', () => {
+            if (currentDownloadFilename) {
+                window.location.href = `/api/download/${currentDownloadFilename}`;
+            }
+        });
+
+        // New analysis button
+        document.getElementById('newAnalysisBtn').addEventListener('click', () => {
+            form.reset();
+            resultSection.style.display = 'none';
+            emptyState.style.display = 'block';
+            currentDownloadFilename = null;
+        });
+
+        // Real-time validation
+        const emailInput = document.getElementById('email');
+        const weightsInput = document.getElementById('weights');
+        const impactsInput = document.getElementById('impacts');
+
+        async function validateForm() {
+            const data = {
+                email: emailInput.value,
+                weights: weightsInput.value,
+                impacts: impactsInput.value
+            };
+
+            try {
+                const response = await fetch('/api/validate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                // Optional: Add visual feedback for validation
+            } catch (error) {
+                console.error('Validation error:', error);
+            }
+        }
+
+        emailInput.addEventListener('change', validateForm);
+        weightsInput.addEventListener('change', validateForm);
+        impactsInput.addEventListener('change', validateForm);
+    </script>
+</body>
+</html>

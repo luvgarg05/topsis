@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # TOPSIS-Lavanya-102313066
 
 [![PyPI version](https://badge.fury.io/py/Topsis-Lavanya-102313066.svg)](https://badge.fury.io/py/Topsis-Lavanya-102313066)
@@ -122,12 +123,61 @@ A live web service provides a graphical user interface for TOPSIS analysis.
 - ✅ Professional UI: Modern dark theme with cyan accents
 
 **Local Access:**
+=======
+# TOPSIS Implementation
+
+## Overview
+
+TOPSIS (Technique for Order Preference by Similarity to Ideal Solution) is a multi-criteria decision-making (MCDM) method used to rank alternatives based on multiple criteria.
+
+**Author:** Lavanya Garg  
+**Roll Number:** 102313066  
+**Institution:** Thapar Institute of Engineering and Technology
+
+## Project Structure
+
+This project consists of three components:
+
+### Part I: Command-Line Program (`topsis.py`)
+A standalone Python script for TOPSIS analysis with comprehensive validation and error handling.
+
+### Part II: PyPI Package (`topsis_package/`)
+A reusable Python package published on PyPI as `Topsis-Lavanya-102313066`.
+
+### Part III: Flask Web Service (`web_service/`)
+An interactive web interface for TOPSIS analysis with file upload support and result download.
+
+## Quick Start
+
+### Using the CLI Program
+
+```bash
+python topsis.py data.csv 1,1,1,2 +,+,+,- results.csv
+```
+
+**Parameters:**
+- `data.csv`: Input file (first column: identifiers, rest: criteria)
+- `1,1,1,2`: Weights (positive numbers)
+- `+,+,+,-`: Impacts (+ for benefit, - for cost)
+- `results.csv`: Output file with scores and ranks
+
+### Using the PyPI Package
+
+```bash
+pip install Topsis-Lavanya-102313066
+topsis-cli data.csv 1,1,1,2 +,+,+,-
+```
+
+### Using the Web Service
+
+>>>>>>> bf61741 (Initial commit)
 ```bash
 cd web_service
 pip install -r requirements.txt
 python app.py
 ```
 
+<<<<<<< HEAD
 Then visit: http://localhost:5000
 
 ## 🧮 Mathematics Behind TOPSIS
@@ -273,3 +323,62 @@ For issues, questions, or suggestions:
 
 **Happy TOPSIS Analysis!** 🚀
 
+=======
+Visit `http://localhost:5000` in your browser.
+
+## TOPSIS Algorithm
+
+**Step 1: Normalization**
+$$n_{ij} = \frac{a_{ij}}{\sqrt{\sum_{i=1}^{m} a_{ij}^2}}$$
+
+**Step 2: Apply Weights**
+$$v_{ij} = w_j \times n_{ij}$$
+
+**Step 3: Find Ideal Solutions**
+- Ideal (A+): max for benefit (+), min for cost (-)
+- Anti-ideal (A-): min for benefit (+), max for cost (-)
+
+**Step 4: Calculate Separations**
+$$S_i^+ = \sqrt{\sum_{j=1}^{n} (v_{ij} - A_j^+)^2}$$
+$$S_i^- = \sqrt{\sum_{j=1}^{n} (v_{ij} - A_j^-)^2}$$
+
+**Step 5: Calculate Scores**
+$$C_i = \frac{S_i^-}{S_i^+ + S_i^-}$$
+
+## Input Format
+
+CSV file with the following structure:
+
+| Name | Criteria1 | Criteria2 | Criteria3 |
+|------|-----------|-----------|-----------|
+| Option1 | 10 | 20 | 30 |
+| Option2 | 15 | 25 | 35 |
+
+- First column: Alternative names/identifiers
+- Other columns: Numeric criteria values
+- All values must be positive
+
+## Output Format
+
+CSV file with original data plus:
+- `Topsis Score`: Score between 0 and 1 (higher is better)
+- `Rank`: Ranking (1 = best)
+
+## Requirements
+
+- Python 3.7+
+- pandas
+- numpy
+
+## Documentation
+
+- [COMPLETE_GUIDE.md](COMPLETE_GUIDE.md) - Comprehensive guide with examples
+- [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) - Deployment instructions
+- [PROJECT_SUMMARY.md](PROJECT_SUMMARY.md) - Project overview
+- [QUICK_REFERENCE.md](QUICK_REFERENCE.md) - Quick reference guide
+- [VERIFICATION_CHECKLIST.md](VERIFICATION_CHECKLIST.md) - Testing checklist
+
+## License
+
+This project is licensed under the MIT License.
+>>>>>>> bf61741 (Initial commit)
