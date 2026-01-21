@@ -30,7 +30,10 @@ load_dotenv()
 app = Flask(__name__)
 
 # Configuration
-UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
+if os.environ.get('VERCEL'):
+    UPLOAD_FOLDER = '/tmp/uploads'
+else:
+    UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
 ALLOWED_EXTENSIONS = {'csv', 'xlsx', 'xls', 'json'}
 MAX_FILE_SIZE = int(os.getenv('MAX_FILE_SIZE', 10 * 1024 * 1024))  # 10MB default
 
