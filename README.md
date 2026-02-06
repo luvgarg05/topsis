@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # TOPSIS-Lavanya-102313066
 
 [![PyPI version](https://badge.fury.io/py/Topsis-Lavanya-102313066.svg)](https://badge.fury.io/py/Topsis-Lavanya-102313066)
